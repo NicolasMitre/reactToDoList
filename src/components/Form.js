@@ -4,22 +4,12 @@ class Form extends React.Component {
   constructor(props) {
     super();
   }
-  clickearBoton = e => {
-    e.preventDefault();
-    const nombre = e.target.children[1].children[1].value;
-    const descripcion = e.target.children[2].children[1].value;
 
-    const task = {
-      name: nombre,
-      description: descripcion
-    };
-
-    this.props.onAddTask(task);
-    e.target.reset();
-  };
   render() {
+    const { onChange, onSendForm, clickearBoton } = this.props;
+
     return (
-      <form onSubmit={this.clickearBoton}>
+      <form onSubmit={clickearBoton}>
         <h1> Envia tus tareas </h1>
         <div className="form-group">
           <label htmlFor="formGroupExampleInput">Nombre de la tarea</label>
@@ -28,7 +18,9 @@ class Form extends React.Component {
             className="form-control"
             id="formGroupExampleInput"
             placeholder="Tarea nueva"
-            defaultValue=""
+            value={onSendForm.name}
+            name="name"
+            onChange={onChange}
           />
         </div>
         <div className="form-group">
@@ -40,7 +32,9 @@ class Form extends React.Component {
             className="form-control"
             id="formGroupExampleInput2"
             placeholder="Descripcion nueva"
-            defaultValue=""
+            value={onSendForm.description}
+            name="description"
+            onChange={onChange}
           />
         </div>
         <button type="submit" className="btn btn-primary">

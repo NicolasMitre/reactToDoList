@@ -19,14 +19,40 @@ class App extends React.Component {
           description: "Generar un proyecto para aprender node.js",
           done: false
         }
-      ]
+      ],
+      form: { name: "", description: "" }
     };
   }
+  onChangeForm = e => {
+    this.setState({
+      form: {
+        ...this.state.form,
+        [e.target.name]: e.target.value
+      }
+    });
+  };
+  clickearBoton = e => {
+    e.preventDefault();
+
+    const nombre = e.target.children[1].children[1].value;
+    const descripcion = e.target.children[2].children[1].value;
+
+    const task = {
+      name: nombre,
+      description: descripcion
+    };
+
+    this.addTask(task);
+    this.setState({
+      form: { name: "", description: "" }
+    });
+    e.target.reset();
+  };
   addTask = task => {
     const taskPushed = this.state.tasks;
 
     if (task.id) {
-      if (task.name !== "editando") {
+      if (task.name !== "Editando") {
         const newTask = {
           id: task.id,
           name: "Editando",
@@ -37,7 +63,8 @@ class App extends React.Component {
         taskPushed.splice(task.id - 1, 1, newTask);
 
         this.setState({
-          tasks: taskPushed
+          tasks: taskPushed,
+          form: { name: task.name, description: task.description }
         });
       }
     } else {
@@ -78,18 +105,24 @@ class App extends React.Component {
       tasks: taskUpdated
     });
   };
-  recibirIdDelHijo = (key, valor) => {
+  recibirIdDelHijo = key => {
     const taskList = this.state.tasks;
     const taskEdit = taskList[key];
 
     this.addTask(taskEdit);
   };
+
   render() {
     return (
       <div className="container">
         <div className="row mt-3">
           <div className="col mb-3">
-            <Form onAddTask={this.addTask} />
+            <Form
+              onAddTask={this.addTask}
+              onChange={this.onChangeForm}
+              onSendForm={this.state.form}
+              clickearBoton={this.clickearBoton}
+            />
           </div>
           <div className="col">
             <List
